@@ -34,6 +34,7 @@ $(async function () {
     const userInstance = await User.login(username, password);
     // set the global user to the user instance
     currentUser = userInstance;
+    
     syncCurrentUserToLocalStorage();
     loginAndSubmitForm();
   });
@@ -56,7 +57,9 @@ $(async function () {
     const newUser = await User.create(username, password, name);
     currentUser = newUser;
     syncCurrentUserToLocalStorage();
+    
     loginAndSubmitForm();
+    fillUserProfile();
   });
 
   //MYCODE: Functionality for bar link toggles. Hiding and showing forms
@@ -184,6 +187,15 @@ $(async function () {
     }
   }
 
+  //MYCODE: function for populationg user profile
+
+  function fillUserProfile() {
+    $("#profile-name").text(`Name: ${localStorage.getItem("name")}`);
+    $("#profile-username").text(`Username: ${localStorage.getItem("username")}`)
+    $("#profile-account-date").text(`Account Created: ${localStorage.getItem("createdAt")}`)
+  }
+  fillUserProfile();
+
   /**
    * A rendering function to run to reset the forms and hide the login info
    */
@@ -202,7 +214,10 @@ $(async function () {
 
     // update the navigation bar
     showNavForLoggedInUser();
+    fillUserProfile();
   }
+
+
 
   /**
    * A rendering function to call the StoryList.getStories static method,
@@ -285,11 +300,15 @@ $(async function () {
   }
 
   /* sync current user information to localStorage */
+  //MYCODE: save key info into local storage
 
   function syncCurrentUserToLocalStorage() {
     if (currentUser) {
       localStorage.setItem("token", currentUser.loginToken);
       localStorage.setItem("username", currentUser.username);
+      localStorage.setItem("createdAt", currentUser.createdAt);
+      localStorage.setItem("name", currentUser.name);
     }
   }
+
 });
