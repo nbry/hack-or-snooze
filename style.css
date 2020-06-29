@@ -228,13 +228,13 @@ create-account-form button {
 
 .article-author {
   margin-top: 5px;
-  margin-left: 25px;
+  margin-left: 5px;
 }
 
 .article-username {
   display: block;
   margin-top: 5px;
-  margin-left: 25px;
+  margin-left: 5px;
 }
 
 #favorited-articles,

@@ -114,13 +114,13 @@ $(async function () {
   $("#close-window").on("click", function () {
     $submitForm.slideUp(150);
     $('#new-story').toggleClass('hidden');
-    $('#dimmer').removeClass('body-shadow')
+    $('#dimmer').removeClass('body-shadow');
   })
 
   $("#dimmer").on("click", function () {
     $submitForm.slideUp(150);
     $('#new-story').toggleClass('hidden');
-    $('#dimmer').removeClass('body-shadow')
+    $('#dimmer').removeClass('body-shadow');
   })
 
   //click on "favorites"
@@ -163,6 +163,23 @@ $(async function () {
     await generateStories();
     ;
   });
+
+  //MYCODE: SUBMIT A NEW STORY
+  $submitForm.on("submit", async function(){
+    const author = $("#author").val();
+    const title = $("#title").val();
+    const url = $("#url").val();
+
+    await StoryList.addStory(author, title, url);
+    generateStories();
+
+    $submitForm.delay(250).slideUp(150);
+    $('#new-story').toggleClass('hidden');
+    $('#dimmer').removeClass('body-shadow');
+
+  })
+
+
 
   /**
    * On page load, checks local storage to see if the user is already logged in.
