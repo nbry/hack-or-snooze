@@ -29,6 +29,10 @@ $(async function() {
     const username = $("#login-username").val();
     const password = $("#login-password").val();
 
+    //MYCODE: append username to top right to show who is logged in.
+    $('#nav-welcome').toggleClass('hidden');
+    $('#nav-user-profile').text(localStorage.getItem('username'));
+
     // call the login static method to build a user instance
     const userInstance = await User.login(username, password);
     // set the global user to the user instance
@@ -64,6 +68,9 @@ $(async function() {
   $navLogOut.on("click", function() {
     // empty out local storage
     localStorage.clear();
+
+    //MYCODE: Clear username from the nav
+    $('#username-nav').val('').toggleClass('hidden');
     // refresh the page, clearing memory
     location.reload();
   });

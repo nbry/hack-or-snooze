@@ -43,11 +43,20 @@ class StoryList {
    * Returns the new story object
    */
 
-  async addStory(user, newStory) {
-    // TODO - Implement this functions!
-    // this function should return the newly created story so it can be used in
-    // the script.js file where it will be appended to the DOM
-  }
+  // static async addStory() {
+  //   // TODO - Implement this functions!
+  //   // this function should return the newly created story so it can be used in
+  //   // the script.js file where it will be appended to the DOM
+  //   const res = await axios.post(`${BASE_URL}/stories`, 
+  //   { 
+  //     token: localStorage.token,
+  //     story: { 
+  //       "author": localStorage.username,
+  //       "title": "testing title",
+  //       "url": "https://en.wikipedia.org/wiki/Test_(assessment)"
+  //     }
+  //   })
+  // }
 }
 
 
