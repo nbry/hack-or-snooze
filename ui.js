@@ -60,23 +60,66 @@ $(async function () {
   });
 
   //MYCODE: Functionality for bar link toggles. Hiding and showing forms
+  function hideBarLinks() {
+    $submitForm.slideUp(250);
+    $('#new-story').addClass('hidden');
+    $('#favorited-articles').slideUp(250);
+    $('#favorites').addClass('hidden');
+    $ownStories.slideUp(250);
+    $allStoriesList.slideUp(400);
+    $("#nav-all").addClass('hidden');
+    $('#my-stories').addClass('hidden');
+  }
 
-  $("#new-story").on("click", function (event) {
+  //click on "submit" new story
+  $("#new-story").on("click", function () {
     if ($('#new-story').hasClass('hidden')) {
-      $("#submit-form").slideDown(150);
+      $submitForm.slideDown(150);
       $('#new-story').toggleClass('hidden');
+      $('#dimmer').addClass('body-shadow')
 
-    } else {
-      $('#submit-form').slideUp(150);
-      $('#new-story').toggleClass('hidden');
-    }
+    } 
   })
 
   $("#close-window").on("click", function () {
-    $('#submit-form').slideUp(150);
+    $submitForm.slideUp(150);
     $('#new-story').toggleClass('hidden');
+    $('#dimmer').removeClass('body-shadow')
   })
 
+  $("#dimmer").on("click", function () {
+    $submitForm.slideUp(150);
+    $('#new-story').toggleClass('hidden');
+    $('#dimmer').removeClass('body-shadow')
+  })
+
+  //click on "favorites"
+  $("#favorites").on("click", function () {
+    if ($("#favorites").hasClass('hidden')) {
+      hideBarLinks();
+      $("#favorited-articles").delay(350).slideDown(500);
+      $("#favorites").toggleClass('hidden');
+    }
+  })
+
+  //click on "my stories"
+  $("#my-stories").on("click", function () {
+    if ($("#my-stories").hasClass('hidden')) {
+      hideBarLinks();
+      $ownStories.delay(350).slideDown(500);
+      $("#my-stories").toggleClass('hidden');
+    }
+  })
+
+  //click on "username"
+  $("#nav-user-profile").on("click", function () {
+    if ($('#user-profile').hasClass('hidden')) {
+      $('#user-profile').slideDown(150).toggleClass('hidden');
+
+    } else {
+      $('#user-profile').slideUp(150).toggleClass('hidden');
+    }
+  })
 
 
   /**
@@ -109,9 +152,13 @@ $(async function () {
    */
 
   $("body").on("click", "#nav-all", async function () {
-    hideElements();
+    if ($("#nav-all").hasClass('hidden')) {
+      hideElements();
+      $allStoriesList.delay(150).slideDown(500)
+      $("#nav-all").removeClass('hidden');
+    }
     await generateStories();
-    $allStoriesList.show();
+    ;
   });
 
   /**
@@ -200,6 +247,7 @@ $(async function () {
   /* hide all elements in elementsArr */
 
   function hideElements() {
+    hideBarLinks();
     const elementsArr = [
       $submitForm,
       $allStoriesList,
@@ -216,7 +264,8 @@ $(async function () {
     $navLogOut.show();
     $(".barlinks").show();
     $("#nav-welcome").show();
-    $("#nav-user-profile").text(localStorage.getItem("username"));
+    $("#nav-user-profile").html(
+      `|<b> &nbsp&nbsp ${localStorage.getItem("username")} &nbsp&nbsp </b>|`);
   }
 
   /* simple function to pull the hostname from a URL */

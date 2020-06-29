@@ -29,34 +29,48 @@
       (logout)
     </a>
   </nav>
+
   <section class="articles-container container">
+
     <form action="" class="hidden" id="submit-form">
+      <h4>Submit a New Story</h4>
       <i id="close-window" class="fas fa-lg fa-sort-up"></i>
       <div>
-        <label for="author">author</label>
+        <label for="author">author:</label>
         <input id="author" required type="text" placeholder="author name">
       </div>
       <div>
-        <label for="title">title</label>
+        <label for="title">title:</label>
         <input id="title" required type="text" placeholder="article title">
       </div>
       <div>
-        <label for="url">url</label>
+        <label for="url">url:</label>
         <input id="url" required type="url" placeholder="article url">
       </div>
       <button type="submit">submit</button>
     </form>
+
+    <section id="user-profile" class="hidden">
+      <h4>User Profile Info</h4>
+      <section>
+        <div id="profile-name">Name: </div>
+        <div id="profile-username">Username:</div>
+        <div id="profile-account-date">Account Created:</div>
+      </section>
+    </section>
 
     <article>
       <ul id="favorited-articles" class="hidden articles-list">
         <li>No favorites added</li>
       </ul>
     </article>
+
     <article>
       <ul id="my-articles" class="hidden articles-list">
         <li>No articles submitted</li>
       </ul>
     </article>
+
     <article>
       <ol id="all-articles-list" class="articles-list">
         <h3>Loading...</h3>
@@ -110,14 +124,9 @@
       <button type="submit">create account</button>
     </form>
   </section>
-  <section id="user-profile" class="container hidden">
-    <h4>User Profile Info</h4>
-    <section>
-      <div id="profile-name">Name: </div>
-      <div id="profile-username">Username:</div>
-      <div id="profile-account-date">Account Created:</div>
-    </section>
-  </section>
+
+  <div id="dimmer"></div>
+
 </body>
 <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
   crossorigin="anonymous"></script>
