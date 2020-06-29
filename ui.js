@@ -1,4 +1,5 @@
-$(async function() {
+$(async function () {
+
   // cache some selectors we'll be using quite a bit
   const $allStoriesList = $("#all-articles-list");
   const $submitForm = $("#submit-form");
@@ -22,16 +23,12 @@ $(async function() {
    *  If successfully we will setup the user instance
    */
 
-  $loginForm.on("submit", async function(evt) {
+  $loginForm.on("submit", async function (evt) {
     evt.preventDefault(); // no page-refresh on submit
 
     // grab the username and password
     const username = $("#login-username").val();
     const password = $("#login-password").val();
-
-    //MYCODE: append username to top right to show who is logged in.
-    $('#nav-welcome').toggleClass('hidden');
-    $('#nav-user-profile').text(localStorage.getItem('username'));
 
     // call the login static method to build a user instance
     const userInstance = await User.login(username, password);
@@ -41,12 +38,13 @@ $(async function() {
     loginAndSubmitForm();
   });
 
+
   /**
    * Event listener for signing up.
    *  If successfully we will setup a new user instance
    */
 
-  $createAccountForm.on("submit", async function(evt) {
+  $createAccountForm.on("submit", async function (evt) {
     evt.preventDefault(); // no page refresh
 
     // grab the required fields
@@ -61,11 +59,31 @@ $(async function() {
     loginAndSubmitForm();
   });
 
+  //MYCODE: Functionality for bar link toggles. Hiding and showing forms
+
+  $("#new-story").on("click", function (event) {
+    if ($('#new-story').hasClass('hidden')) {
+      $("#submit-form").slideDown(150);
+      $('#new-story').toggleClass('hidden');
+
+    } else {
+      $('#submit-form').slideUp(150);
+      $('#new-story').toggleClass('hidden');
+    }
+  })
+
+  $("#close-window").on("click", function () {
+    $('#submit-form').slideUp(150);
+    $('#new-story').toggleClass('hidden');
+  })
+
+
+
   /**
    * Log Out Functionality
    */
 
-  $navLogOut.on("click", function() {
+  $navLogOut.on("click", function () {
     // empty out local storage
     localStorage.clear();
 
@@ -79,7 +97,7 @@ $(async function() {
    * Event Handler for Clicking Login
    */
 
-  $navLogin.on("click", function() {
+  $navLogin.on("click", function () {
     // Show the Login and Create Account Forms
     $loginForm.slideToggle();
     $createAccountForm.slideToggle();
@@ -90,7 +108,7 @@ $(async function() {
    * Event handler for Navigation to Homepage
    */
 
-  $("body").on("click", "#nav-all", async function() {
+  $("body").on("click", "#nav-all", async function () {
     hideElements();
     await generateStories();
     $allStoriesList.show();
@@ -196,6 +214,9 @@ $(async function() {
   function showNavForLoggedInUser() {
     $navLogin.hide();
     $navLogOut.show();
+    $(".barlinks").show();
+    $("#nav-welcome").show();
+    $("#nav-user-profile").text(localStorage.getItem("username"));
   }
 
   /* simple function to pull the hostname from a URL */

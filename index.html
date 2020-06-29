@@ -6,20 +6,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Hack or Snooze</title>
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU"
-    crossorigin="anonymous">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css"
+    integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
   <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 
 <body>
   <nav>
     <b><a class="nav-link navbar-brand" href="#" id="nav-all">Hack or Snooze</a></b>
-    <span class="barlinks hidden">  |  </span>
-    <a class="barlinks nav-link navbar-brand hidden" href="#"> Submit </a>
-    <span class="barlinks hidden">  |  </span>
-    <a class="barlinks nav-link navbar-brand hidden" href="#"> Favorites </a>
-    <span class="barlinks hidden">  |  </span>
-    <a class="barlinks nav-link navbar-brand hidden" href="#"> My Stories </a>
+    <span class="barlinks hidden"> | </span>
+    <a id="new-story" class="barlinks nav-link navbar-brand hidden" href="#"> Submit </a>
+    <span class="barlinks hidden"> | </span>
+    <a id="favorites" class="barlinks nav-link navbar-brand hidden" href="#"> Favorites </a>
+    <span class="barlinks hidden"> | </span>
+    <a id="my-stories" class="barlinks nav-link navbar-brand hidden" href="#"> My Stories </a>
 
     <a class="nav-link nav-right" href="#" id="nav-login">login/create user</a>
     <span class="nav-link nav-right hidden" id="nav-welcome">
@@ -31,6 +31,7 @@
   </nav>
   <section class="articles-container container">
     <form action="" class="hidden" id="submit-form">
+      <i id="close-window" class="fas fa-lg fa-sort-up"></i>
       <div>
         <label for="author">author</label>
         <input id="author" required type="text" placeholder="author name">
@@ -44,25 +45,29 @@
         <input id="url" required type="url" placeholder="article url">
       </div>
       <button type="submit">submit</button>
-      <hr>
     </form>
+
+    <article>
+      <ul id="favorited-articles" class="hidden articles-list">
+        <li>No favorites added</li>
+      </ul>
+    </article>
+    <article>
+      <ul id="my-articles" class="hidden articles-list">
+        <li>No articles submitted</li>
+      </ul>
+    </article>
     <article>
       <ol id="all-articles-list" class="articles-list">
         <h3>Loading...</h3>
       </ol>
     </article>
-    <article>
-      <ul id="favorited-articles" class="hidden articles-list">
-      </ul>
-    </article>
+
     <article>
       <ul id="filtered-articles" class="hidden articles-list">
       </ul>
     </article>
-    <article>
-      <ul id="my-articles" class="hidden articles-list">
-      </ul>
-    </article>
+
   </section>
   <section class="edit-article-container container">
     <form action="#" id="edit-article-form" class="hidden" method="post">
@@ -108,7 +113,7 @@
   <section id="user-profile" class="container hidden">
     <h4>User Profile Info</h4>
     <section>
-      <div id="profile-name">Name:</div>
+      <div id="profile-name">Name: </div>
       <div id="profile-username">Username:</div>
       <div id="profile-account-date">Account Created:</div>
     </section>

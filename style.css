@@ -107,20 +107,45 @@ form input:focus {
 }
 
 form > button {
-  width: 4rem;
-  margin: 5px 0px 15px 65px;
-  border: none;
-  border-radius: 4px;
-  padding: 8px;
-  font-size: 0.85rem;
+  width           : 4rem;
+  margin          : 5px 0px 15px 65px;
+  border          : none;
+  border-radius   : 4px;
+  padding         : 8px;
+  font-size       : 0.85rem;
   background-color: lightslategray;
-  color: white;
-  cursor: pointer;
-  transition: all 0.15s;
+  color           : white;
+  cursor          : pointer;
+  transition      : all 0.15s;
+  float           : inline-start;
+}
+
+#nav-user-profile {
+  text-align: right;
+}
+
+#author {
+  margin-top: 15px;
+}
+
+#close-window {
+  text-align: right;
+  position  : absolute;
+  top       : 8px;
+  right     : 10px;
+  display   : inline-block;
+  margin    : 0px;
+  margin-top: 2px;
+}
+
+#close-window:hover {
+  color     : lightgreen;
+  cursor    : pointer;
+  transition: 80ms;
 }
 
 form > button:hover {
-  background-color: dimgray;
+  background-color: lightgreen;
 }
 
 form > hr {
@@ -137,7 +162,7 @@ form > hr {
   margin-left: 80px;
 }
 
-#create-account-form button {
+create-account-form button {
   padding: 10px;
   width: 8rem;
 }
@@ -233,4 +258,20 @@ form > hr {
     max-width: 900px;
     margin: 8px auto;
   }
+}
+
+
+#all-articles-list {
+  position: relative;
+  z-index : 1;
+}
+
+#submit-form, #favorited-articles, #my-articles {
+  position     : absolute;
+  background   : white;
+  z-index      : 5;
+  padding-right: 30px;
+  border       : 1px solid white;
+  border-radius: 20px;
+  box-shadow   : 5px 5px 5px gray;
 }
