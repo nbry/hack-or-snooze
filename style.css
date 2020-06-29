@@ -35,7 +35,7 @@ a:hover {
   display: none;
 }
 
-#nav-all {
+#nav-all, #nav-user-profile {
   display: inline;
 }
 
@@ -270,7 +270,7 @@ create-account-form button {
   z-index : 1;
 }
 
-#submit-form, #user-profile {
+#submit-form {
   position     : absolute;
   background   : white;
   z-index      : 5;
@@ -280,9 +280,6 @@ create-account-form button {
   box-shadow   : 5px 5px 5px gray;
 }
 
-#user-profile{
-  object-position: right;
-}
 
 .body-shadow {
   position        : fixed;

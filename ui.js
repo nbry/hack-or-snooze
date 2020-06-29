@@ -62,13 +62,16 @@ $(async function () {
   //MYCODE: Functionality for bar link toggles. Hiding and showing forms
   function hideBarLinks() {
     $submitForm.slideUp(250);
-    $('#new-story').addClass('hidden');
-    $('#favorited-articles').slideUp(250);
-    $('#favorites').addClass('hidden');
     $ownStories.slideUp(250);
+    $("#favorited-articles").slideUp(250);
+    $("#user-profile").slideUp(250);
     $allStoriesList.slideUp(400);
+
+    $("#nav-user-profile").addClass('hidden');
+    $("#new-story").addClass('hidden');
+    $("#favorites").addClass('hidden');
     $("#nav-all").addClass('hidden');
-    $('#my-stories').addClass('hidden');
+    $("#my-stories").addClass('hidden');
   }
 
   //click on "submit" new story
@@ -78,7 +81,7 @@ $(async function () {
       $('#new-story').toggleClass('hidden');
       $('#dimmer').addClass('body-shadow')
 
-    } 
+    }
   })
 
   $("#close-window").on("click", function () {
@@ -114,10 +117,9 @@ $(async function () {
   //click on "username"
   $("#nav-user-profile").on("click", function () {
     if ($('#user-profile').hasClass('hidden')) {
-      $('#user-profile').slideDown(150).toggleClass('hidden');
-
-    } else {
-      $('#user-profile').slideUp(150).toggleClass('hidden');
+      hideBarLinks();
+      $("#user-profile").delay(350).slideDown(500);
+      $("#nav-user-profile").toggleClass('hidden');
     }
   })
 
@@ -154,7 +156,7 @@ $(async function () {
   $("body").on("click", "#nav-all", async function () {
     if ($("#nav-all").hasClass('hidden')) {
       hideElements();
-      $allStoriesList.delay(150).slideDown(500)
+      $allStoriesList.delay(250).slideDown(500)
       $("#nav-all").removeClass('hidden');
     }
     await generateStories();
@@ -196,7 +198,7 @@ $(async function () {
     $createAccountForm.trigger("reset");
 
     // show the stories
-    $allStoriesList.show();
+    $allStoriesList.slideDown(400);
 
     // update the navigation bar
     showNavForLoggedInUser();
@@ -252,7 +254,6 @@ $(async function () {
       $submitForm,
       $allStoriesList,
       $filteredArticles,
-      $ownStories,
       $loginForm,
       $createAccountForm
     ];
