@@ -1,6 +1,5 @@
 $(async function () {
 
-  // cache some selectors we'll be using quite a bit
   const $allStoriesList = $("#all-articles-list");
   const $submitForm = $("#submit-form");
   const $filteredArticles = $("#filtered-articles");
@@ -34,7 +33,7 @@ $(async function () {
     const userInstance = await User.login(username, password);
     // set the global user to the user instance
     currentUser = userInstance;
-    
+
     syncCurrentUserToLocalStorage();
     loginAndSubmitForm();
   });
@@ -57,9 +56,34 @@ $(async function () {
     const newUser = await User.create(username, password, name);
     currentUser = newUser;
     syncCurrentUserToLocalStorage();
-    
+
     loginAndSubmitForm();
     fillUserProfile();
+  });
+
+  /**
+   * Log Out Functionality
+   */
+
+  $navLogOut.on("click", function () {
+    // empty out local storage
+    localStorage.clear();
+
+    //MYCODE: Clear username from the nav
+    $('#username-nav').val('').toggleClass('hidden');
+    // refresh the page, clearing memory
+    location.reload();
+  });
+
+  /**
+   * Event Handler for Clicking Login
+   */
+
+  $navLogin.on("click", function () {
+    // Show the Login and Create Account Forms
+    $loginForm.slideToggle();
+    $createAccountForm.slideToggle();
+    $allStoriesList.toggle();
   });
 
   //MYCODE: Functionality for bar link toggles. Hiding and showing forms
@@ -125,32 +149,6 @@ $(async function () {
       $("#nav-user-profile").toggleClass('hidden');
     }
   })
-
-
-  /**
-   * Log Out Functionality
-   */
-
-  $navLogOut.on("click", function () {
-    // empty out local storage
-    localStorage.clear();
-
-    //MYCODE: Clear username from the nav
-    $('#username-nav').val('').toggleClass('hidden');
-    // refresh the page, clearing memory
-    location.reload();
-  });
-
-  /**
-   * Event Handler for Clicking Login
-   */
-
-  $navLogin.on("click", function () {
-    // Show the Login and Create Account Forms
-    $loginForm.slideToggle();
-    $createAccountForm.slideToggle();
-    $allStoriesList.toggle();
-  });
 
   /**
    * Event handler for Navigation to Homepage
@@ -282,6 +280,7 @@ $(async function () {
     $("#nav-welcome").show();
     $("#nav-user-profile").html(
       `|<b> &nbsp&nbsp ${localStorage.getItem("username")} &nbsp&nbsp </b>|`);
+    $("#nav-user-profile").addClass('hidden').show();
   }
 
   /* simple function to pull the hostname from a URL */

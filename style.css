@@ -33,10 +33,23 @@ a:hover {
 
 .hidden {
   display: none;
+  font-weight: normal;
+  color: black;
+  text-decoration: none;
+}
+
+nav a {
+  color: rgb(110, 110, 110);
 }
 
 #nav-all, #nav-user-profile {
   display: inline;
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+#nav-all, #nav-login{
+  color: black;
 }
 
 nav {
