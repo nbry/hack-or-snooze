@@ -125,6 +125,10 @@ $(async function () {
 
   //click on "favorites"
   $("#favorites").on("click", async function () {
+    if(!$('#favorites').hasClass('hidden')){
+      return;
+    }
+    
     $('#favorited-articles').html('');
     const user = await StoryList.generalHelper(localStorage.username);
     const favorites = user.data.user.favorites;
