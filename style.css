@@ -142,9 +142,10 @@ form > button {
 }
 
 .fa-heart{
-  padding-left: 4px;
+  padding-left : 4px;
   padding-right: 4px;
 }
+
 
 #nav-user-profile {
   font-size: 1rem;

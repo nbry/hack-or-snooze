@@ -17,11 +17,10 @@ $(async function () {
   let currentUser = null;
   await checkIfLoggedIn();
 
-
   /**
-   * Event listener for logging in.
-   *  If successfully we will setup the user instance
-   */
+ * Event listener for logging in.
+ *  If successfully we will setup the user instance
+ */
 
   $loginForm.on("submit", async function (evt) {
     evt.preventDefault(); // no page-refresh on submit
@@ -132,14 +131,14 @@ $(async function () {
 
     for (let story of favorites) {
       const result = generateStoryHTML(story);
-      result.children("span").html('<i class="fas fav fa-heart"></i>')
+      result.children("span").html('<i class="fas fa-heart"></i>')
         .addClass('fav').removeClass('unfav');
       $('#favorited-articles').append(result);
     }
 
-    $("span.fav-heart").on("click", async function (event) {
+    $("i.fa-heart").on("click", async function (event) {
       favToggle(event);
-      favAppendOrRemove(event);
+      await favAppendOrRemove(event);
     });
 
     if ($("#favorites").hasClass('hidden')) {
@@ -244,25 +243,29 @@ $(async function () {
 
   //MYCODE: function for clicking on favorite (heart) icon. Changing style
   function favToggle(event) {
+    let eventClass = event.target.classList;
     let parentClass = event.target.parentElement.classList;
     // $('event.target').remove().append('<i class="fas fa-heart"></i>');
     if (parentClass.contains('unfav')) {
-      event.target.outerHTML = '<i class="fav fas fa-heart"></i>';
-      event.currentTarget.classList.add('fav');
-      event.currentTarget.classList.remove('unfav');
+      parentClass.add('fav');
+      parentClass.remove('unfav');
+      eventClass.add('fas');
+      eventClass.remove('far');
     } else {
-      event.target.outerHTML = '<i class="unfav far fa-heart"></i>';
-      event.currentTarget.classList.add('unfav');
-      event.currentTarget.classList.remove('fav');
-    }
+      
+      parentClass.add('unfav');
+      parentClass.remove('fav');
+      eventClass.add('far');
+      eventClass.remove('fas');
+    };
   }
 
   //MYCODE: Append favorite from main page to favorites page
 
   async function favAppendOrRemove(event) {
-    const heartSpan = event.currentTarget;
+    const heartSpan = event.target.parentElement;
 
-    if (event.currentTarget.classList.contains('fav')) {
+    if (heartSpan.classList.contains('fav')) {
       const res = await StoryList.addFavorite(localStorage.username, heartSpan.parentElement.id);
     } else {
       const res = await StoryList.deleteFavorite(localStorage.username, heartSpan.parentElement.id);
@@ -290,7 +293,7 @@ $(async function () {
     // update the navigation bar
     showNavForLoggedInUser();
     fillUserProfile();
-    
+
   }
 
 
@@ -321,7 +324,7 @@ $(async function () {
       const result = generateStoryHTML(story);
       if (currentUser) {
         if (refinedFavs.includes(story.storyId)) {
-          result.children("span").html('<i class="fas fav fa-heart"></i>')
+          result.children("span").html('<i class="fas fa-heart"></i>')
             .addClass('fav').removeClass('unfav')
         }
       };
@@ -330,18 +333,9 @@ $(async function () {
 
     //MYCODE: Adding click listener for heart icons
     if (currentUser) {
-      $("span.fav-heart").on("click", async function (event) {
+      $("i.fa-heart").on("click", async function (event) {
         favToggle(event);
-        try {
-          await favAppendOrRemove(event);
-        }
-        catch (error) {
-          alert("We apologize for the malfunction. Please refresh the page");
-          debugger;
-        }
-        finally {
-
-        }
+        await favAppendOrRemove(event);
       });
     }
   }
