@@ -126,7 +126,7 @@ $(async function () {
   //click on "favorites"
   $("#favorites").on("click", async function () {
     $('#favorited-articles').html('');
-    const user = await StoryList.getFavoritesHelper(localStorage.username);
+    const user = await StoryList.generalHelper(localStorage.username);
     const favorites = user.data.user.favorites;
 
     for (let story of favorites) {
@@ -151,12 +151,31 @@ $(async function () {
   })
 
   //click on "my stories"
-  $("#my-stories").on("click", function () {
+  $("#my-stories").on("click", async function () {
+    $('#my-articles').html('');
+
+    const user = await StoryList.generalHelper(localStorage.username);
+    const myStories = user.data.user.stories;
+
+    for (let story of myStories) {
+      const result = generateStoryHTML(story);
+      result.children("span").html('<i class="fas fa-trash"></i>');
+      $('#my-articles').append(result);
+    }
+
+    $("i.fa-trash").on("click", async function (event) {
+      const li = event.currentTarget.parentElement.parentElement;
+      const res = await StoryList.deleteStory(li.id);
+      $(`#${li.id}`).slideUp(100);
+      myStoriesPlaceHolder();
+    });
+
     if ($("#my-stories").hasClass('hidden')) {
       hideBarLinks();
       $ownStories.delay(350).slideDown(500);
       $("#my-stories").toggleClass('hidden');
     }
+    myStoriesPlaceHolder();
   })
 
   //click on "username"
@@ -199,9 +218,35 @@ $(async function () {
     $("#title").val('');
     $("#url").val('');
 
+    if (!$('#my-stories').hasClass('hidden')) {
+      $('#my-articles').html('');
+
+      const user = await StoryList.generalHelper(localStorage.username);
+      const myStories = user.data.user.stories;
+
+      for (let story of myStories) {
+        const result = generateStoryHTML(story);
+        result.children("span").html('<i class="fas fa-trash"></i>');
+        $('#my-articles').append(result);
+      }
+
+      $("i.fa-trash").on("click", async function (event) {
+        const li = event.currentTarget.parentElement.parentElement;
+        const res = await StoryList.deleteStory(li.id);
+        $(`#${li.id}`).slideUp(100);
+        myStoriesPlaceHolder();
+      });
+
+      if ($("#my-stories").hasClass('hidden')) {
+        hideBarLinks();
+        $ownStories.delay(350).slideDown(500);
+        $("#my-stories").toggleClass('hidden');
+      }
+      myStoriesPlaceHolder();
+
+    }
+
   })
-
-
 
   /**
    * On page load, checks local storage to see if the user is already logged in.
@@ -238,6 +283,15 @@ $(async function () {
       $('#favorited-articles').append('<li id="fav-placeholder">No favorites added</li>')
     } else {
       $("#fav-placeholder").remove();
+    }
+  }
+
+  //MYCODE: Check if my stories list is empty
+  function myStoriesPlaceHolder() {
+    if ($('#my-articles').children().html() === undefined) {
+      $('#my-articles').append('<li id="mine-placeholder">No articles submitted</li>')
+    } else {
+      $("#mine-placeholder").remove();
     }
   }
 
@@ -314,7 +368,7 @@ $(async function () {
 
     let refinedFavs;
     if (currentUser) {
-      const data = await StoryList.getFavoritesHelper(localStorage.username);
+      const data = await StoryList.generalHelper(localStorage.username);
       const favorites = data.data.user.favorites;
       refinedFavs = favorites.map(val => val.storyId);
     }

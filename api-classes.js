@@ -68,7 +68,13 @@ class StoryList {
     return res;
   }
 
-  static async getFavoritesHelper(username) {
+  static async deleteStory(storyId) {
+    const res = await axios.delete(`${BASE_URL}/stories/${storyId}`, { data: { "token": localStorage.token } });
+    return res;
+  }
+
+
+  static async generalHelper(username) {
     const res = await axios.get(`${BASE_URL}/users/${username}`, { params: { "token": localStorage.token } });
     return res;
   }
