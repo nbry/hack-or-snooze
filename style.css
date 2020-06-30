@@ -311,7 +311,7 @@ create-account-form button {
   right           : 0;
   bottom          : 0;
   top             : 0;
-  background-color: rgba(148, 148, 148, 0.507);
+  background-color: rgba(75, 75, 75, 0.507);
   transition      : 500ms;
   z-index         : 2;
 }

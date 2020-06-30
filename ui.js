@@ -92,7 +92,7 @@ $(async function () {
     $submitForm.slideUp(250);
     $ownStories.slideUp(250);
     $("#favorited-articles").slideUp(250);
-    $("#user-profile").slideUp(50);
+    $("#user-profile").slideUp(250);
     $allStoriesList.slideUp(400);
 
     $("#nav-user-profile").addClass('hidden');
@@ -270,22 +270,6 @@ $(async function () {
   };
 
 
-
-  async function favPopulate() {
-    $('#favorited-articles').html('');
-    for (let story of await currentUser.favorites) {
-      const result = generateStoryHTML(story);
-      $('#favorited-articles').append(result);
-    }
-
-    $('#favorited-articles').children().children("span").html('<i class="fas fav fa-heart"></i>');
-    favPlaceHolder();
-  }
-
-  if (currentUser) {
-    favPopulate()
-  }
-
   /**
    * A rendering function to run to reset the forms and hide the login info
    */
@@ -306,7 +290,7 @@ $(async function () {
     // update the navigation bar
     showNavForLoggedInUser();
     fillUserProfile();
-    favPopulate();
+    
   }
 
 
@@ -345,10 +329,21 @@ $(async function () {
     }
 
     //MYCODE: Adding click listener for heart icons
-    $("span.fav-heart").on("click", async function (event) {
-      favToggle(event);
-      await favAppendOrRemove(event);
-    });
+    if (currentUser) {
+      $("span.fav-heart").on("click", async function (event) {
+        favToggle(event);
+        try {
+          await favAppendOrRemove(event);
+        }
+        catch (error) {
+          alert("We apologize for the malfunction. Please refresh the page");
+          debugger;
+        }
+        finally {
+
+        }
+      });
+    }
   }
 
   /**
