@@ -151,6 +151,12 @@ form > button {
   padding-right: 5px;
 }
 
+.fa-trash:hover {
+  color           : rgba(255, 128, 23, 0.979);
+  transition      : 50ms;
+  transition-delay: 100ms;
+}
+
 
 #nav-user-profile {
   font-size: 1rem;
