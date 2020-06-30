@@ -252,7 +252,7 @@ $(async function () {
       eventClass.add('fas');
       eventClass.remove('far');
     } else {
-      
+
       parentClass.add('unfav');
       parentClass.remove('fav');
       eventClass.add('far');
@@ -346,9 +346,10 @@ $(async function () {
 
   function generateStoryHTML(story) {
     let hostName = getHostName(story.url);
-
-    // render story markup
-    const storyMarkup = $(`
+    let storyMarkup;
+    // render story markup MYCODE: do not append hearts on logout
+    if (currentUser) {
+      storyMarkup = $(`
       <li id="${story.storyId}">
       <span class="fav-heart unfav"><i class="far fa-heart"></i></span>
         <a class="article-link" href="${story.url}" target="a_blank">
@@ -359,6 +360,19 @@ $(async function () {
         <small class="article-username">posted by ${story.username}</small>
       </li>
     `);
+    } else {
+      storyMarkup = $(`
+      <li id="${story.storyId}">
+        &emsp; &nbsp;
+        <a class="article-link" href="${story.url}" target="a_blank">
+          <strong>${story.title}</strong>
+        </a>
+        <small class="article-author">by ${story.author}</small>
+        <small class="article-hostname ${hostName}">(${hostName})</small>
+        <small class="article-username">posted by ${story.username}</small>
+      </li>
+    `);
+    }
 
     return storyMarkup;
   }
