@@ -188,10 +188,12 @@ $(async function () {
 
   //click on "username"
   $("#nav-user-profile").on("click", function () {
-    if ($('#user-profile').hasClass('hidden')) {
+    if ($('#nav-user-profile').hasClass('hidden')) {
       hideBarLinks();
       $("#user-profile").delay(350).slideDown(500);
-      $("#nav-user-profile").toggleClass('hidden');
+      $("#nav-user-profile").removeClass('hidden');
+    } else {
+      return;
     }
   })
 
