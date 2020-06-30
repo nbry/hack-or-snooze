@@ -128,7 +128,7 @@ $(async function () {
     if(!$('#favorites').hasClass('hidden')){
       return;
     }
-    
+
     $('#favorited-articles').html('');
     const user = await StoryList.generalHelper(localStorage.username);
     const favorites = user.data.user.favorites;
@@ -156,6 +156,10 @@ $(async function () {
 
   //click on "my stories"
   $("#my-stories").on("click", async function () {
+    if(!$('#my-stories').hasClass('hidden')){
+      return;
+    }
+    
     $('#my-articles').html('');
 
     const user = await StoryList.generalHelper(localStorage.username);
