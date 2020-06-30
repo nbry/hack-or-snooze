@@ -47,16 +47,32 @@ class StoryList {
     // TODO - Implement this functions!
     // this function should return the newly created story so it can be used in
     // the script.js file where it will be appended to the DOM
-    const res = await axios.post(`${BASE_URL}/stories`, 
-    { 
-      token: localStorage.getItem("token"),
-      story: { 
-        author, 
-        title, 
-        url
-      }
-    })
+    const res = await axios.post(`${BASE_URL}/stories`,
+      {
+        token: localStorage.getItem("token"),
+        story: {
+          author,
+          title,
+          url
+        }
+      })
   }
+
+  static async addFavorite(username, id) {
+    const res = await axios.post(`${BASE_URL}/users/${username}/favorites/${id}`, { "token": localStorage.token });
+    return res;
+  }
+
+  static async deleteFavorite(username, id) {
+    const res = await axios.delete(`${BASE_URL}/users/${username}/favorites/${id}`, { data: { "token": localStorage.token } });
+    return res;
+  }
+
+  static async getFavoritesHelper(username) {
+    const res = await axios.get(`${BASE_URL}/users/${username}`, { params: { "token": localStorage.token } });
+    return res;
+  }
+
 }
 
 

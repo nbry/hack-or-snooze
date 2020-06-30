@@ -9,13 +9,14 @@ $(async function () {
   const $navLogin = $("#nav-login");
   const $navLogOut = $("#nav-logout");
 
+
   // global storyList variable
   let storyList = null;
 
   // global currentUser variable
   let currentUser = null;
-
   await checkIfLoggedIn();
+
 
   /**
    * Event listener for logging in.
@@ -65,14 +66,14 @@ $(async function () {
    * Log Out Functionality
    */
 
-  $navLogOut.on("click", function () {
+  $navLogOut.on("click", async function () {
     // empty out local storage
     localStorage.clear();
 
     //MYCODE: Clear username from the nav
-    $('#username-nav').val('').toggleClass('hidden');
+    hideBarLinks();
     // refresh the page, clearing memory
-    location.reload();
+    setTimeout(location.reload.bind(window.location), 1500);
   });
 
   /**
@@ -91,7 +92,7 @@ $(async function () {
     $submitForm.slideUp(250);
     $ownStories.slideUp(250);
     $("#favorited-articles").slideUp(250);
-    $("#user-profile").slideUp(250);
+    $("#user-profile").slideUp(50);
     $allStoriesList.slideUp(400);
 
     $("#nav-user-profile").addClass('hidden');
@@ -124,12 +125,30 @@ $(async function () {
   })
 
   //click on "favorites"
-  $("#favorites").on("click", function () {
+  $("#favorites").on("click", async function () {
+    $('#favorited-articles').html('');
+    const user = await StoryList.getFavoritesHelper(localStorage.username);
+    const favorites = user.data.user.favorites;
+
+    for (let story of favorites) {
+      const result = generateStoryHTML(story);
+      result.children("span").html('<i class="fas fav fa-heart"></i>')
+        .addClass('fav').removeClass('unfav');
+      $('#favorited-articles').append(result);
+    }
+
+    $("span.fav-heart").on("click", async function (event) {
+      favToggle(event);
+      favAppendOrRemove(event);
+    });
+
     if ($("#favorites").hasClass('hidden')) {
       hideBarLinks();
       $("#favorited-articles").delay(350).slideDown(500);
       $("#favorites").toggleClass('hidden');
     }
+    favPlaceHolder();
+
   })
 
   //click on "my stories"
@@ -155,17 +174,17 @@ $(async function () {
    */
 
   $("body").on("click", "#nav-all", async function () {
+
     if ($("#nav-all").hasClass('hidden')) {
-      hideElements();
-      $allStoriesList.delay(250).slideDown(500)
+      hideBarLinks();
+      await generateStories();
+      $allStoriesList.delay(150).slideDown(400)
       $("#nav-all").removeClass('hidden');
     }
-    await generateStories();
-    ;
   });
 
   //MYCODE: SUBMIT A NEW STORY
-  $submitForm.on("submit", async function(){
+  $submitForm.on("submit", async function () {
     const author = $("#author").val();
     const title = $("#title").val();
     const url = $("#url").val();
@@ -176,6 +195,10 @@ $(async function () {
     $submitForm.delay(250).slideUp(150);
     $('#new-story').toggleClass('hidden');
     $('#dimmer').removeClass('body-shadow');
+
+    $("#author").val('');
+    $("#title").val('');
+    $("#url").val('');
 
   })
 
@@ -203,13 +226,65 @@ $(async function () {
   }
 
   //MYCODE: function for populationg user profile
-
   function fillUserProfile() {
     $("#profile-name").text(`Name: ${localStorage.getItem("name")}`);
     $("#profile-username").text(`Username: ${localStorage.getItem("username")}`)
     $("#profile-account-date").text(`Account Created: ${localStorage.getItem("createdAt")}`)
   }
   fillUserProfile();
+
+  //MYCODE: Check if favorites list is empty
+  function favPlaceHolder() {
+    if ($('#favorited-articles').children().html() === undefined) {
+      $('#favorited-articles').append('<li id="fav-placeholder">No favorites added</li>')
+    } else {
+      $("#fav-placeholder").remove();
+    }
+  }
+
+  //MYCODE: function for clicking on favorite (heart) icon. Changing style
+  function favToggle(event) {
+    let parentClass = event.target.parentElement.classList;
+    // $('event.target').remove().append('<i class="fas fa-heart"></i>');
+    if (parentClass.contains('unfav')) {
+      event.target.outerHTML = '<i class="fav fas fa-heart"></i>';
+      event.currentTarget.classList.add('fav');
+      event.currentTarget.classList.remove('unfav');
+    } else {
+      event.target.outerHTML = '<i class="unfav far fa-heart"></i>';
+      event.currentTarget.classList.add('unfav');
+      event.currentTarget.classList.remove('fav');
+    }
+  }
+
+  //MYCODE: Append favorite from main page to favorites page
+
+  async function favAppendOrRemove(event) {
+    const heartSpan = event.currentTarget;
+
+    if (event.currentTarget.classList.contains('fav')) {
+      const res = await StoryList.addFavorite(localStorage.username, heartSpan.parentElement.id);
+    } else {
+      const res = await StoryList.deleteFavorite(localStorage.username, heartSpan.parentElement.id);
+    }
+  };
+
+
+
+  async function favPopulate() {
+    $('#favorited-articles').html('');
+    for (let story of await currentUser.favorites) {
+      const result = generateStoryHTML(story);
+      $('#favorited-articles').append(result);
+    }
+
+    $('#favorited-articles').children().children("span").html('<i class="fas fav fa-heart"></i>');
+    favPlaceHolder();
+  }
+
+  if (currentUser) {
+    favPopulate()
+  }
 
   /**
    * A rendering function to run to reset the forms and hide the login info
@@ -225,11 +300,13 @@ $(async function () {
     $createAccountForm.trigger("reset");
 
     // show the stories
+    generateStories();
     $allStoriesList.slideDown(400);
 
     // update the navigation bar
     showNavForLoggedInUser();
     fillUserProfile();
+    favPopulate();
   }
 
 
@@ -242,16 +319,36 @@ $(async function () {
   async function generateStories() {
     // get an instance of StoryList
     const storyListInstance = await StoryList.getStories();
+
     // update our global variable
     storyList = storyListInstance;
     // empty out that part of the page
     $allStoriesList.empty();
 
+    let refinedFavs;
+    if (currentUser) {
+      const data = await StoryList.getFavoritesHelper(localStorage.username);
+      const favorites = data.data.user.favorites;
+      refinedFavs = favorites.map(val => val.storyId);
+    }
+
     // loop through all of our stories and generate HTML for them
     for (let story of storyList.stories) {
       const result = generateStoryHTML(story);
+      if (currentUser) {
+        if (refinedFavs.includes(story.storyId)) {
+          result.children("span").html('<i class="fas fav fa-heart"></i>')
+            .addClass('fav').removeClass('unfav')
+        }
+      };
       $allStoriesList.append(result);
     }
+
+    //MYCODE: Adding click listener for heart icons
+    $("span.fav-heart").on("click", async function (event) {
+      favToggle(event);
+      await favAppendOrRemove(event);
+    });
   }
 
   /**
@@ -264,6 +361,7 @@ $(async function () {
     // render story markup
     const storyMarkup = $(`
       <li id="${story.storyId}">
+      <span class="fav-heart unfav"><i class="far fa-heart"></i></span>
         <a class="article-link" href="${story.url}" target="a_blank">
           <strong>${story.title}</strong>
         </a>

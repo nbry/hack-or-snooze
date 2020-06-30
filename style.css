@@ -26,10 +26,6 @@ a {
   color: inherit;
 }
 
-a:hover {
-  text-decoration: underline;
-}
-
 
 .hidden {
   display: none;
@@ -39,7 +35,7 @@ a:hover {
 }
 
 nav a {
-  color: rgb(110, 110, 110);
+  color: rgb(157, 8, 202);
 }
 
 #nav-all, #nav-user-profile {
@@ -54,9 +50,9 @@ nav a {
 
 nav {
   display: flex;
-  background-color: #ff6600;
+  background-color: #03db9a;
   align-items: center;
-  padding: 5px 20px;
+  padding: 10px 20px;
   border-radius: 3px 3px 0 0;
 }
 
@@ -85,7 +81,7 @@ nav {
   display: flex;
   flex-direction: column;
   align-self: center;
-  background-color: #f6f6ef;
+  background-color: #e4ecfc;
 }
 
 form {
@@ -133,6 +129,21 @@ form > button {
   cursor          : pointer;
   transition      : all 0.15s;
   float           : inline-start;
+}
+
+.unfav:hover {
+  color: yellow;
+  transition: 50ms;
+  transition-delay: 100ms;
+}
+
+.fav {
+  color: rgb(233, 122, 122);
+}
+
+.fa-heart{
+  padding-left: 4px;
+  padding-right: 4px;
 }
 
 #nav-user-profile {
@@ -234,7 +245,7 @@ create-account-form button {
 .article-username {
   display: block;
   margin-top: 5px;
-  margin-left: 5px;
+  margin-left: 26px;
 }
 
 #favorited-articles,
