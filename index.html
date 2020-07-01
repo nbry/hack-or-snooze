@@ -21,7 +21,7 @@
     <span class="barlinks hidden"> | </span>
     <a id="my-stories" class="barlinks nav-link navbar-brand hidden" href="#"> My Stories </a>
 
-    <a class="nav-link nav-right" href="#" id="nav-login">login/create user</a>
+    <a class="nav-link nav-right hidden1" href="#" id="nav-login">login/create user</a>
     <span class="nav-link nav-right hidden" id="nav-welcome">
       <a href="#" id="nav-user-profile"></a>
     </span>
@@ -111,15 +111,15 @@
       <h4>Create Account</h4>
       <div class="login-input">
         <label for="create-account-name">name</label>
-        <input id="create-account-name" type="text">
+        <input maxlength="30" id="create-account-name" type="text">
       </div>
       <div class="login-input">
         <label for="create-account-username">username</label>
-        <input id="create-account-username" type="text">
+        <input maxlength="13" minlength="4" id="create-account-username" type="text">
       </div>
       <div class="login-input">
         <label for="create-account-password">password</label>
-        <input id="create-account-password" type="password">
+        <input maxlength="30" minlength="5"  id="create-account-password" type="password">
       </div>
       <button type="submit">create account</button>
     </form>

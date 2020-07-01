@@ -35,7 +35,10 @@ $(async function () {
     currentUser = userInstance;
 
     syncCurrentUserToLocalStorage();
+
+
     loginAndSubmitForm();
+
   });
 
 
@@ -75,15 +78,20 @@ $(async function () {
     setTimeout(location.reload.bind(window.location), 1500);
   });
 
-  /**
-   * Event Handler for Clicking Login
-   */
 
+  //MY CODE: login/createUser button function
   $navLogin.on("click", function () {
-    // Show the Login and Create Account Forms
-    $loginForm.slideToggle();
-    $createAccountForm.slideToggle();
-    $allStoriesList.toggle();
+    if ($navLogin.hasClass('hidden1')) {
+      $allStoriesList.slideUp(250);
+      $loginForm.delay(250).slideDown(350);
+      $createAccountForm.delay(250).slideDown(450);
+      $navLogin.removeClass('hidden1');
+    } else {
+      $loginForm.slideUp(250);
+      $createAccountForm.slideUp(250);
+      $allStoriesList.delay(250).slideDown(450);
+      $navLogin.addClass('hidden1');
+    }
   });
 
   //MYCODE: Functionality for bar link toggles. Hiding and showing forms
@@ -125,7 +133,7 @@ $(async function () {
 
   //click on "favorites"
   $("#favorites").on("click", async function () {
-    if(!$('#favorites').hasClass('hidden')){
+    if (!$('#favorites').hasClass('hidden')) {
       return;
     }
 
@@ -156,10 +164,10 @@ $(async function () {
 
   //click on "my stories"
   $("#my-stories").on("click", async function () {
-    if(!$('#my-stories').hasClass('hidden')){
+    if (!$('#my-stories').hasClass('hidden')) {
       return;
     }
-    
+
     $('#my-articles').html('');
 
     const user = await StoryList.generalHelper(localStorage.username);

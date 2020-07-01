@@ -110,13 +110,22 @@ class User {
    */
 
   static async create(username, password, name) {
-    const response = await axios.post(`${BASE_URL}/signup`, {
-      user: {
-        username,
-        password,
-        name
+    try {
+      const response = await axios.post(`${BASE_URL}/signup`, {
+        user: {
+          username,
+          password,
+          name
+        }
+      });
+    }
+    catch (error) {
+      if (error.response.status === 409) {
+        const newErr = new Error("Username taken. Please chose another");
+        alert(newErr);
+        throw newErr;
       }
-    });
+    }
 
     // build a new User instance from the API response
     const newUser = new User(response.data.user);
@@ -134,12 +143,26 @@ class User {
    */
 
   static async login(username, password) {
-    const response = await axios.post(`${BASE_URL}/login`, {
-      user: {
-        username,
-        password
+    try {
+      const response = await axios.post(`${BASE_URL}/login`, {
+        user: {
+          username,
+          password
+        }
+      });
+    }
+    catch (error) {
+      if (error.response.status === 401) {
+        const newErr = new Error("Please enter valid password");
+        alert(newErr);
+        throw newErr;
       }
-    });
+      if (error.response.status === 404) {
+        const newErr = new Error("Username not found");
+        alert(newErr);
+        throw newErr;
+      }
+    }
 
     // build a new User instance from the API response
     const existingUser = new User(response.data.user);
