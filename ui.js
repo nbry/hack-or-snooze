@@ -17,11 +17,7 @@ $(async function () {
   let currentUser = null;
   await checkIfLoggedIn();
 
-  /**
- * Event listener for logging in.
- *  If successfully we will setup the user instance
- */
-
+  //STARTERCODE: event listener for login:
   $loginForm.on("submit", async function (evt) {
     evt.preventDefault(); // no page-refresh on submit
 
@@ -41,12 +37,7 @@ $(async function () {
 
   });
 
-
-  /**
-   * Event listener for signing up.
-   *  If successfully we will setup a new user instance
-   */
-
+  //STARTERCODE: event listener for creating account
   $createAccountForm.on("submit", async function (evt) {
     evt.preventDefault(); // no page refresh
 
@@ -64,22 +55,18 @@ $(async function () {
     fillUserProfile();
   });
 
-  /**
-   * Log Out Functionality
-   */
-
+  //MYCODE: log out functionality:
+  // 1. Clear Local Storage
+  // 2. Slide up animation for all content
+  // 3. After 1.5 seconds, refresh the page
   $navLogOut.on("click", async function () {
-    // empty out local storage
     localStorage.clear();
-
-    //MYCODE: Clear username from the nav
     hideBarLinks();
-    // refresh the page, clearing memory
     setTimeout(location.reload.bind(window.location), 1500);
   });
 
 
-  //MY CODE: login/createUser button function
+  //MY CODE: login/createUser button sliding animations
   $navLogin.on("click", function () {
     if ($navLogin.hasClass('hidden1')) {
       $allStoriesList.slideUp(250);
@@ -94,7 +81,10 @@ $(async function () {
     }
   });
 
-  //MYCODE: Functionality for bar link toggles. Hiding and showing forms
+  //MYCODE: Functionality for bar link toggles.
+  //1. Hides all content by sliding up animation
+  //2. Adds class of "hidden" to all buttons. 
+  //3. Buttons are not actually hidden due to css ordering
   function hideBarLinks() {
     $submitForm.slideUp(250);
     $ownStories.slideUp(250);
@@ -109,34 +99,41 @@ $(async function () {
     $("#my-stories").addClass('hidden');
   }
 
-  //click on "submit" new story
+  //MYCODE: clicking submit on new story:
+  //1. Dims the page
+  //2. Slides down new story submit window
   $("#new-story").on("click", function () {
     if ($('#new-story').hasClass('hidden')) {
       $submitForm.slideDown(150);
       $('#new-story').toggleClass('hidden');
       $('#dimmer').addClass('body-shadow')
-
     }
   })
 
+  //MYCODE: function for close window button on new story window
   $("#close-window").on("click", function () {
     $submitForm.slideUp(150);
     $('#new-story').toggleClass('hidden');
     $('#dimmer').removeClass('body-shadow');
   })
 
+  //MYCODE: adds event listener for dimmer div, which takes up whole page:
+  //It closes the the new story window as well.
   $("#dimmer").on("click", function () {
     $submitForm.slideUp(150);
     $('#new-story').toggleClass('hidden');
     $('#dimmer').removeClass('body-shadow');
   })
 
-  //click on "favorites"
+  //MYCODE:clicking on favorites tab
   $("#favorites").on("click", async function () {
+
+    //Prevents clicking on it again.
     if (!$('#favorites').hasClass('hidden')) {
       return;
     }
 
+    //Populates a list saved on user data using api helper function
     $('#favorited-articles').html('');
     const user = await StoryList.generalHelper(localStorage.username);
     const favorites = user.data.user.favorites;
@@ -148,6 +145,7 @@ $(async function () {
       $('#favorited-articles').append(result);
     }
 
+    //Appended heart allows user to toggle favorites from favorites window
     $("i.fa-heart").on("click", async function (event) {
       favToggle(event);
       await favAppendOrRemove(event);
@@ -162,7 +160,8 @@ $(async function () {
 
   })
 
-  //click on "my stories"
+  //MYCODE: Click on my stories tab. Similar function to favorited articles
+  //tab. Lots of repeated code. Long function. Room for improvement
   $("#my-stories").on("click", async function () {
     if (!$('#my-stories').hasClass('hidden')) {
       return;
@@ -179,6 +178,7 @@ $(async function () {
       $('#my-articles').append(result);
     }
 
+    //Deleting story is not a toggle. Slide Up animation after deleting
     $("i.fa-trash").on("click", async function (event) {
       const li = event.currentTarget.parentElement.parentElement;
       const res = await StoryList.deleteStory(li.id);
@@ -194,7 +194,7 @@ $(async function () {
     myStoriesPlaceHolder();
   })
 
-  //click on "username"
+  //MYCODE: clicking on username shows user profile infomration
   $("#nav-user-profile").on("click", function () {
     if ($('#nav-user-profile').hasClass('hidden')) {
       hideBarLinks();
@@ -205,10 +205,7 @@ $(async function () {
     }
   })
 
-  /**
-   * Event handler for Navigation to Homepage
-   */
-
+  //MYCODE: clicking on home page icon populates page with stories
   $("body").on("click", "#nav-all", async function () {
 
     if ($("#nav-all").hasClass('hidden')) {
@@ -228,6 +225,7 @@ $(async function () {
     await StoryList.addStory(author, title, url);
     generateStories();
 
+    //Slide up after submitting. Remove page dimmer
     $submitForm.delay(250).slideUp(150);
     $('#new-story').toggleClass('hidden');
     $('#dimmer').removeClass('body-shadow');
@@ -236,6 +234,9 @@ $(async function () {
     $("#title").val('');
     $("#url").val('');
 
+    //Specific language for if user submits a story while the my-stories
+    //tab is open. Appends new story to My Stories page. Repeated code.
+    //Room for improvement
     if (!$('#my-stories').hasClass('hidden')) {
       $('#my-articles').html('');
 
@@ -266,11 +267,8 @@ $(async function () {
 
   })
 
-  /**
-   * On page load, checks local storage to see if the user is already logged in.
-   * Renders page information accordingly.
-   */
-
+  //STARTER CODE: On page load, checks local storage to see if the user is already
+  //logged in. REnder page information accordingly.
   async function checkIfLoggedIn() {
     // let's see if we're logged in
     const token = localStorage.getItem("token");
@@ -287,7 +285,7 @@ $(async function () {
     }
   }
 
-  //MYCODE: function for populationg user profile
+  //MYCODE: function for populationg user profile. Gets from Local Storage
   function fillUserProfile() {
     $("#profile-name").text(`Name: ${localStorage.getItem("name")}`);
     $("#profile-username").text(`Username: ${localStorage.getItem("username")}`)
@@ -304,7 +302,8 @@ $(async function () {
     }
   }
 
-  //MYCODE: Check if my stories list is empty
+  //MYCODE: Check if my stories list is empty. Mostly repeated code from above.
+  //Room for improvement
   function myStoriesPlaceHolder() {
     if ($('#my-articles').children().html() === undefined) {
       $('#my-articles').append('<li id="mine-placeholder">No articles submitted</li>')
@@ -313,18 +312,17 @@ $(async function () {
     }
   }
 
-  //MYCODE: function for clicking on favorite (heart) icon. Changing style
+  //MYCODE: function for clicking on favorite (heart) icon. Changing style and 
+  //toggling classes. Room for improvement: use class toggle
   function favToggle(event) {
     let eventClass = event.target.classList;
     let parentClass = event.target.parentElement.classList;
-    // $('event.target').remove().append('<i class="fas fa-heart"></i>');
     if (parentClass.contains('unfav')) {
       parentClass.add('fav');
       parentClass.remove('unfav');
       eventClass.add('fas');
       eventClass.remove('far');
     } else {
-
       parentClass.add('unfav');
       parentClass.remove('fav');
       eventClass.add('far');
@@ -332,8 +330,7 @@ $(async function () {
     };
   }
 
-  //MYCODE: Append favorite from main page to favorites page
-
+  //MYCODE: Calling static functions... http requests for adding and removing favorites
   async function favAppendOrRemove(event) {
     const heartSpan = event.target.parentElement;
 
@@ -344,11 +341,7 @@ $(async function () {
     }
   };
 
-
-  /**
-   * A rendering function to run to reset the forms and hide the login info
-   */
-
+  //STARTER CODE: a rendering function to run to reset the forms and hide the login info
   function loginAndSubmitForm() {
     // hide the forms for logging in and signing up
     $loginForm.hide();
@@ -368,13 +361,8 @@ $(async function () {
 
   }
 
-
-
-  /**
-   * A rendering function to call the StoryList.getStories static method,
-   *  which will generate a storyListInstance. Then render it.
-   */
-
+  //A rendering function to call the StoryList.getStories static method,
+  //which will generate a storyListInstance. Then render it.
   async function generateStories() {
     // get an instance of StoryList
     const storyListInstance = await StoryList.getStories();
@@ -384,6 +372,7 @@ $(async function () {
     // empty out that part of the page
     $allStoriesList.empty();
 
+    //MYCODE:functionality for reflecting user's favorites
     let refinedFavs;
     if (currentUser) {
       const data = await StoryList.generalHelper(localStorage.username);
@@ -391,7 +380,8 @@ $(async function () {
       refinedFavs = favorites.map(val => val.storyId);
     }
 
-    // loop through all of our stories and generate HTML for them
+    //MYCODE: loop through all of our stories and generate HTML for them
+    //Only performs if user is logged in
     for (let story of storyList.stories) {
       const result = generateStoryHTML(story);
       if (currentUser) {
@@ -412,14 +402,13 @@ $(async function () {
     }
   }
 
-  /**
-   * A function to render HTML for an individual Story instance
-   */
-
+  //MYCODE: Generating HTML for a story. If user is logged in, this code
+  //will appened a clickable heart, representating favorites
   function generateStoryHTML(story) {
     let hostName = getHostName(story.url);
     let storyMarkup;
-    // render story markup MYCODE: do not append hearts on logout
+
+    //If user is logged in, add heart
     if (currentUser) {
       storyMarkup = $(`
       <li id="${story.storyId}">
@@ -432,7 +421,9 @@ $(async function () {
         <small class="article-username">posted by ${story.username}</small>
       </li>
     `);
-    } else {
+    }
+    //if user is logged out, do not add heart
+    else {
       storyMarkup = $(`
       <li id="${story.storyId}">
         &emsp; &nbsp;
@@ -449,8 +440,8 @@ $(async function () {
     return storyMarkup;
   }
 
-  /* hide all elements in elementsArr */
-
+  //STARTERCODE: hide all elements in elementsArr... might be obsolete.
+  //Room for improvement.
   function hideElements() {
     hideBarLinks();
     const elementsArr = [
@@ -463,6 +454,7 @@ $(async function () {
     elementsArr.forEach($elem => $elem.hide());
   }
 
+  //Showing navigation bar for logged in user
   function showNavForLoggedInUser() {
     $navLogin.hide();
     $navLogOut.show();
@@ -473,8 +465,7 @@ $(async function () {
     $("#nav-user-profile").addClass('hidden').show();
   }
 
-  /* simple function to pull the hostname from a URL */
-
+  //STARTERCODE: simple function to pull the hostname from a URL */
   function getHostName(url) {
     let hostName;
     if (url.indexOf("://") > -1) {
@@ -488,9 +479,8 @@ $(async function () {
     return hostName;
   }
 
-  /* sync current user information to localStorage */
-  //MYCODE: save key info into local storage
-
+  //STARTERCODE: sync current user information to localStorage 
+  //MYCODE: added some other information
   function syncCurrentUserToLocalStorage() {
     if (currentUser) {
       localStorage.setItem("token", currentUser.loginToken);
@@ -499,5 +489,4 @@ $(async function () {
       localStorage.setItem("name", currentUser.name);
     }
   }
-
 });

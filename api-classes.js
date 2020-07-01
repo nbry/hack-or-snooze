@@ -58,6 +58,7 @@ class StoryList {
       })
   }
 
+  //MYCODE:
   static async addFavorite(username, id) {
     const res = await axios.post(`${BASE_URL}/users/${username}/favorites/${id}`, { "token": localStorage.token });
     return res;
@@ -72,7 +73,6 @@ class StoryList {
     const res = await axios.delete(`${BASE_URL}/stories/${storyId}`, { data: { "token": localStorage.token } });
     return res;
   }
-
 
   static async generalHelper(username) {
     const res = await axios.get(`${BASE_URL}/users/${username}`, { params: { "token": localStorage.token } });
@@ -108,6 +108,9 @@ class User {
    * - password: a new password
    * - name: the user's full name
    */
+  
+  //MYCODE: added error handling for wrong username, wrong password, duplicate
+  //account name upon creation etc.
 
   static async create(username, password, name) {
     try {
