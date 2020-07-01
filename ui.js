@@ -175,14 +175,15 @@ $(async function () {
     for (let story of myStories) {
       const result = generateStoryHTML(story);
       result.children("span").html('<i class="fas fa-trash"></i>');
+      result.children("span").removeClass('unfav');
       $('#my-articles').append(result);
     }
 
     //Deleting story is not a toggle. Slide Up animation after deleting
     $("i.fa-trash").on("click", async function (event) {
       const li = event.currentTarget.parentElement.parentElement;
-      const res = await StoryList.deleteStory(li.id);
       $(`#${li.id}`).slideUp(100);
+      const res = await StoryList.deleteStory(li.id);
       myStoriesPlaceHolder();
     });
 
@@ -246,13 +247,14 @@ $(async function () {
       for (let story of myStories) {
         const result = generateStoryHTML(story);
         result.children("span").html('<i class="fas fa-trash"></i>');
+        result.children("span").removeClass('unfav');
         $('#my-articles').append(result);
       }
 
       $("i.fa-trash").on("click", async function (event) {
         const li = event.currentTarget.parentElement.parentElement;
-        const res = await StoryList.deleteStory(li.id);
         $(`#${li.id}`).slideUp(100);
+        const res = await StoryList.deleteStory(li.id);
         myStoriesPlaceHolder();
       });
 

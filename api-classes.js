@@ -131,7 +131,7 @@ class User {
     }
     catch (error) {
       if (error.response.status === 409) {
-        const newErr = new Error("Username taken. Please chose another");
+        const newErr = new Error("Username taken. Please choose another");
         alert(newErr);
         throw newErr;
       }
@@ -167,7 +167,7 @@ class User {
     }
     catch (error) {
       if (error.response.status === 401) {
-        const newErr = new Error("Please enter valid password");
+        const newErr = new Error("Password incorrect");
         alert(newErr);
         throw newErr;
       }
