@@ -163,6 +163,12 @@ class User {
         throw newErr;
       }
     }
+    const response = await axios.post(`${BASE_URL}/login`, {
+      user: {
+        username,
+        password
+      }
+    });
 
     // build a new User instance from the API response
     const existingUser = new User(response.data.user);
