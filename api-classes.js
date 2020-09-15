@@ -1,4 +1,4 @@
-const BASE_URL = "https://hack-or-snooze-v3.herokuapp.com";
+const BASE_URL = 'https://hack-or-snooze-v3.herokuapp.com'
 
 /**
  * This class maintains the list of individual Story instances
@@ -6,8 +6,8 @@ const BASE_URL = "https://hack-or-snooze-v3.herokuapp.com";
  */
 
 class StoryList {
-  constructor(stories) {
-    this.stories = stories;
+  constructor (stories) {
+    this.stories = stories
   }
 
   /**
@@ -23,16 +23,16 @@ class StoryList {
   // is **not** an instance method. Rather, it is a method that is called on the
   // class directly. Why doesn't it make sense for getStories to be an instance method?
 
-  static async getStories() {
+  static async getStories () {
     // query the /stories endpoint (no auth required)
-    const response = await axios.get(`${BASE_URL}/stories`);
+    const response = await axios.get(`${BASE_URL}/stories`)
 
     // turn the plain old story objects from the API into instances of the Story class
-    const stories = response.data.stories.map(story => new Story(story));
+    const stories = response.data.stories.map(story => new Story(story))
 
     // build an instance of our own class using the new array of stories
-    const storyList = new StoryList(stories);
-    return storyList;
+    const storyList = new StoryList(stories)
+    return storyList
   }
 
   /**
@@ -43,44 +43,51 @@ class StoryList {
    * Returns the new story object
    */
 
-  static async addStory(author, title, url) {
+  static async addStory (author, title, url) {
     // TODO - Implement this functions!
     // this function should return the newly created story so it can be used in
     // the script.js file where it will be appended to the DOM
-    const res = await axios.post(`${BASE_URL}/stories`,
-      {
-        token: localStorage.getItem("token"),
-        story: {
-          author,
-          title,
-          url
-        }
-      })
+    const res = await axios.post(`${BASE_URL}/stories`, {
+      token: localStorage.getItem('token'),
+      story: {
+        author,
+        title,
+        url
+      }
+    })
   }
 
   //MYCODE:
-  static async addFavorite(username, id) {
-    const res = await axios.post(`${BASE_URL}/users/${username}/favorites/${id}`, { "token": localStorage.token });
-    return res;
+  static async addFavorite (username, id) {
+    const res = await axios.post(
+      `${BASE_URL}/users/${username}/favorites/${id}`,
+      { token: localStorage.token }
+    )
+    return res
   }
 
-  static async deleteFavorite(username, id) {
-    const res = await axios.delete(`${BASE_URL}/users/${username}/favorites/${id}`, { data: { "token": localStorage.token } });
-    return res;
+  static async deleteFavorite (username, id) {
+    const res = await axios.delete(
+      `${BASE_URL}/users/${username}/favorites/${id}`,
+      { data: { token: localStorage.token } }
+    )
+    return res
   }
 
-  static async deleteStory(storyId) {
-    const res = await axios.delete(`${BASE_URL}/stories/${storyId}`, { data: { "token": localStorage.token } });
-    return res;
+  static async deleteStory (storyId) {
+    const res = await axios.delete(`${BASE_URL}/stories/${storyId}`, {
+      data: { token: localStorage.token }
+    })
+    return res
   }
 
-  static async generalHelper(username) {
-    const res = await axios.get(`${BASE_URL}/users/${username}`, { params: { "token": localStorage.token } });
-    return res;
+  static async generalHelper (username) {
+    const res = await axios.get(`${BASE_URL}/users/${username}`, {
+      params: { token: localStorage.token }
+    })
+    return res
   }
-
 }
-
 
 /**
  * The User class to primarily represent the current user.
@@ -88,16 +95,16 @@ class StoryList {
  */
 
 class User {
-  constructor(userObj) {
-    this.username = userObj.username;
-    this.name = userObj.name;
-    this.createdAt = userObj.createdAt;
-    this.updatedAt = userObj.updatedAt;
+  constructor (userObj) {
+    this.username = userObj.username
+    this.name = userObj.name
+    this.createdAt = userObj.createdAt
+    this.updatedAt = userObj.updatedAt
 
     // these are all set to defaults, not passed in by the constructor
-    this.loginToken = "";
-    this.favorites = [];
-    this.ownStories = [];
+    this.loginToken = ''
+    this.favorites = []
+    this.ownStories = []
   }
 
   /* Create and return a new user.
@@ -108,11 +115,11 @@ class User {
    * - password: a new password
    * - name: the user's full name
    */
-  
+
   //MYCODE: added error handling for wrong username, wrong password, duplicate
   //account name upon creation etc.
 
-  static async create(username, password, name) {
+  static async create (username, password, name) {
     try {
       const response = await axios.post(`${BASE_URL}/signup`, {
         user: {
@@ -120,20 +127,18 @@ class User {
           password,
           name
         }
-      });
-      const newUser = new User(response.data.user);
-
+      })
+      const newUser = new User(response.data.user)
 
       // attach the token to the newUser instance for convenience
-      newUser.loginToken = response.data.token;
+      newUser.loginToken = response.data.token
 
-      return newUser;
-    }
-    catch (error) {
+      return newUser
+    } catch (error) {
       if (error.response.status === 409) {
-        const newErr = new Error("Username taken. Please choose another");
-        alert(newErr);
-        throw newErr;
+        const newErr = new Error('Username taken. Please choose another')
+        alert(newErr)
+        throw newErr
       }
     }
   }
@@ -144,38 +149,34 @@ class User {
    * - password: an existing user's password
    */
 
-  static async login(username, password) {
+  static async login (username, password) {
     try {
       const response = await axios.post(`${BASE_URL}/login`, {
         user: {
           username,
           password
         }
-      });
+      })
 
       // build a new User instance from the API response
-      const existingUser = new User(response.data.user);
+      const existingUser = new User(response.data.user)
 
       // instantiate Story instances for the user's favorites and ownStories
-      existingUser.favorites = response.data.user.favorites.map(s => new Story(s));
-      existingUser.ownStories = response.data.user.stories.map(s => new Story(s));
+      existingUser.favorites = response.data.user.favorites.map(
+        s => new Story(s)
+      )
+      existingUser.ownStories = response.data.user.stories.map(
+        s => new Story(s)
+      )
 
       // attach the token to the newUser instance for convenience
-      existingUser.loginToken = response.data.token;
+      existingUser.loginToken = response.data.token
 
-      return existingUser;
-    }
-    catch (error) {
-      if (error.response.status === 401) {
-        const newErr = new Error("Password incorrect");
-        alert(newErr);
-        throw newErr;
-      }
-      if (error.response.status === 404) {
-        const newErr = new Error("Username not found");
-        alert(newErr);
-        throw newErr;
-      }
+      return existingUser
+    } catch (error) {
+      const newErr = new Error('username or password incorrect')
+      alert(newErr)
+      throw newErr
     }
   }
 
@@ -185,27 +186,27 @@ class User {
    *   about the user. Then it creates an instance of user with that info.
    */
 
-  static async getLoggedInUser(token, username) {
+  static async getLoggedInUser (token, username) {
     // if we don't have user info, return null
-    if (!token || !username) return null;
+    if (!token || !username) return null
 
     // call the API
     const response = await axios.get(`${BASE_URL}/users/${username}`, {
       params: {
         token
       }
-    });
+    })
 
     // instantiate the user from the API information
-    const existingUser = new User(response.data.user);
+    const existingUser = new User(response.data.user)
 
     // attach the token to the newUser instance for convenience
-    existingUser.loginToken = token;
+    existingUser.loginToken = token
 
     // instantiate Story instances for the user's favorites and ownStories
-    existingUser.favorites = response.data.user.favorites.map(s => new Story(s));
-    existingUser.ownStories = response.data.user.stories.map(s => new Story(s));
-    return existingUser;
+    existingUser.favorites = response.data.user.favorites.map(s => new Story(s))
+    existingUser.ownStories = response.data.user.stories.map(s => new Story(s))
+    return existingUser
   }
 }
 
@@ -214,19 +215,18 @@ class User {
  */
 
 class Story {
-
   /**
    * The constructor is designed to take an object for better readability / flexibility
    * - storyObj: an object that has story properties in it
    */
 
-  constructor(storyObj) {
-    this.author = storyObj.author;
-    this.title = storyObj.title;
-    this.url = storyObj.url;
-    this.username = storyObj.username;
-    this.storyId = storyObj.storyId;
-    this.createdAt = storyObj.createdAt;
-    this.updatedAt = storyObj.updatedAt;
+  constructor (storyObj) {
+    this.author = storyObj.author
+    this.title = storyObj.title
+    this.url = storyObj.url
+    this.username = storyObj.username
+    this.storyId = storyObj.storyId
+    this.createdAt = storyObj.createdAt
+    this.updatedAt = storyObj.updatedAt
   }
 }
