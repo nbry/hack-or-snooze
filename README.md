@@ -1,4 +1,4 @@
-# hack-or-snooze
+# [hack-or-snooze](https://nbry.github.io/hack-or-snooze/)
 
 Hack or snooze is a shallow clone of Hacker News. 
 
